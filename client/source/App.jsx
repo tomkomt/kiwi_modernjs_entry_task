@@ -7,7 +7,6 @@ import './reset.css';
 import './App.scss';
 import 'semantic-ui-css/semantic.min.css';
 
-
 const history = createBrowserHistory();
 
 class App extends React.Component {
