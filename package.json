@@ -28,6 +28,7 @@
     "os": "^0.1.1",
     "path": "^0.12.7",
     "react": "^16.2.0",
+    "react-datepicker": "^1.1.0",
     "react-dom": "^16.2.0",
     "react-icons": "^2.2.7",
     "react-loaders": "^3.0.1",
