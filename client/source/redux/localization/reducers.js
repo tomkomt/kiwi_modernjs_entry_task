@@ -8,10 +8,10 @@ const INIT_STATE = {
     localizationData: null
 };
 
-const localization = (state = Immutable.Map(INIT_STATE), action) => {
+const localization = (state = Immutable.fromJS(INIT_STATE), action) => {
     switch(action.type) {
         case LOAD_LOCALIZATION:
-            return Immutable.Map({
+            return Immutable.fromJS({
                 rev: uuid(),
                 success: action.success,
                 localizationData: action.localizationData
