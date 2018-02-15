@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Immutable from 'immutable';
 import { loadLocalization } from '../../redux/localization/actions';
+import { requestLoadAirports } from '../../redux/airports/actions';
+import SearchForm from '../SearchForm/SearchForm';
 
 class AppWrapper extends React.Component {
     constructor(props) {
@@ -9,6 +12,7 @@ class AppWrapper extends React.Component {
 
     componentDidMount() {
         this.props.loadLocalization('en-US');
+        this.props.requestLoadAirports('en-US');
     }
 
     componentWillReceiveProps(nextProps) {
@@ -22,6 +26,7 @@ class AppWrapper extends React.Component {
     render() {
         return(
             <div className="app-container">
+                <SearchForm/>
             </div>
         )
     }
@@ -29,7 +34,8 @@ class AppWrapper extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        localization: state.get('localization')
+        localization: state.get('localization') ? state.get('localization') : Immutable.Map(),
+        airports: state.get('airports') ? state.get('airports') : Immutable.Map()
     }
 }
 
@@ -37,6 +43,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         loadLocalization: (localizationCode) => {
             dispatch(loadLocalization(localizationCode));
+        },
+        requestLoadAirports: (localizationCode) => {
+            dispatch(requestLoadAirports(localizationCode));
         }
     }
 }
