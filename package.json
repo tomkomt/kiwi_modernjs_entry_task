@@ -1,5 +1,5 @@
 {
-  "name": "Kiwi.com ModernJS Entry Task",
+  "name": "kiwi-modernjs-entry-task",
   "version": "0.0.1",
   "description": "Entry task for application for ModernJS Weekend",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "client": "webpack-dev-server --colors",
     "client-build": "webpack"
   },
-  "author": "",
+  "author": "Marek Tomko <tomko.mt@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "ajv": "^5.5.0",
