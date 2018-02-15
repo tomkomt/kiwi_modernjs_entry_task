@@ -1,3 +1,3 @@
 module.exports = {
-    apiUrl: 'https://api.skypicker.com/'
+    apiUrl: 'https://api.skypicker.com'
 }
