@@ -1,3 +1,12 @@
 module.exports = {
-    searchForm_header_text: 'Kam by ste dnes radi leteli?'
+    searchForm: {
+        headerText: 'Kam by ste dnes radi leteli?',
+        fieldFromText: 'Odkiaľ:',
+        fieldFromPlaceholder: 'Vyberte si letisko odletu',
+        fieldToText: 'Kam:',
+        fieldToPlaceholder: 'Vyberte si letisko príletu',
+        fieldWhenText: 'Kedy:',
+        submitButtonText: 'Potvrdiť'
+
+    } 
 }
