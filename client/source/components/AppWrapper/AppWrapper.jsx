@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { loadLocalization } from '../../redux/localization/actions';
+
 import SearchForm from '../SearchForm/SearchForm';
+import FoundFlightsResults from '../FoundFlightsResults/FoundFlightsResults';
 
 class AppWrapper extends React.Component {
     constructor(props) {
@@ -29,6 +31,7 @@ class AppWrapper extends React.Component {
         return(
             <div className="app-container">
                 <SearchForm {...this.state} />
+                <FoundFlightsResults {...this.state} />
             </div>
         )
     }
