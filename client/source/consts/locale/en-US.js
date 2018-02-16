@@ -13,6 +13,8 @@ module.exports = {
     },
     foundFlightsResults: {
         waitingForYourInput: 'Welcome. Please, select airport of your departure, arrival and date range of your trip.',
-        loadingFlightsResults: 'Loading... Please wait.'
+        loadingFlightsResults: 'Loading... Please wait.',
+        labelPrice: 'Price',
+        labelFlightDuration: 'Flight duration'
     } 
 }

@@ -13,6 +13,8 @@ module.exports = {
     },
     foundFlightsResults: {
         waitingForYourInput: 'Vitajte. Prosím, vyberte si miesto odletu, príletu a dátum začiatku a konca Vašej cesty.',
-        loadingFlightsResults: 'Načítavam... Prosím počkajte.'
+        loadingFlightsResults: 'Načítavam... Prosím počkajte.',
+        labelPrice: 'Cena',
+        labelFlightDuration: 'Dĺžka letu'
     }  
 }

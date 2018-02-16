@@ -96,13 +96,13 @@ class FoundFlightsResults extends React.Component {
                     <List.Content floated='left' verticalAlign='middle'>
                         <Statistic size='mini'>
                             <Statistic.Value>{flight.get('price')} &euro;</Statistic.Value>
-                            <Statistic.Label>Price</Statistic.Label>
+                            <Statistic.Label>{this.props.localization.get('labelPrice')}</Statistic.Label>
                         </Statistic>
                     </List.Content>
                     <List.Content floated='left' verticalAlign='middle'>
                         <Statistic size='mini'>
                             <Statistic.Value>{flight.get('fly_duration')}</Statistic.Value>
-                            <Statistic.Label>Flight Duration</Statistic.Label>
+                            <Statistic.Label>{this.props.localization.get('labelFlightDuration')}</Statistic.Label>
                         </Statistic>                        
                     </List.Content>
                     <List.Content floated='left' verticalAlign='middle'>
@@ -148,7 +148,7 @@ const mapStateToProps = (state) => {
         localization: state.getIn(['localization', 'localizationData', 'foundFlightsResults']) ? state.getIn(['localization', 'localizationData', 'foundFlightsResults']) : Immutable.Map(),
         flights: state.get('flights') ? state.get('flights') : Immutable.Map(),
         airlines: state.getIn(['airlines', 'airlinesList']) ? state.getIn(['airlines', 'airlinesList']) : Immutable.List(),
-        eventsEmitter: state.get('eventsEmitter') ? state.get('eventsEmitter') : Immutable.Map(),
+        eventsEmitter: state.get('eventsEmitter') ? state.get('eventsEmitter') : Immutable.Map()
     }
 }
 
