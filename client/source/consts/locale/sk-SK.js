@@ -6,7 +6,8 @@ module.exports = {
         fieldToText: 'Kam:',
         fieldToPlaceholder: 'Vyberte si letisko príletu',
         fieldWhenText: 'Kedy:',
-        submitButtonText: 'Potvrdiť'
-
+        submitButtonText: 'Potvrdiť',
+        fieldDropdownNoResultsMessage_noResult: 'Nič sa nenašlo...',
+        fieldDropdownNoResultsMessage_loading: 'Načítavam... Prosím počkajte.'
     } 
 }
