@@ -13,7 +13,6 @@ class SearchForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            init: true,
             fromDestination: '',
             fromDestinationList: [],
             fromSearchQuery: '',
