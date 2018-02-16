@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import { requestLoadAirportsByGPS, requestLoadAirportsByQuery } from '../../redux/airports/actions';
 import { requestSimpleFlightsSearch } from '../../redux/flights/actions';
+import { emitEvent } from '../../redux/eventsEmitter/actions';
 import Consts from '../../consts/consts';
 
 class SearchForm extends React.Component {
@@ -154,6 +155,7 @@ class SearchForm extends React.Component {
     }
 
     handleSubmitForm() {
+        this.props.emitEvent('searchFormSubmit');
         this.props.requestSimpleFlightsSearch(
             this.state.fromDestination,
             this.state.toDestination,
@@ -256,6 +258,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         requestSimpleFlightsSearch: (from, to, dateFrom, dateTo) => {
             dispatch(requestSimpleFlightsSearch(from, to, dateFrom, dateTo))
+        },
+        emitEvent: (event) => {
+            dispatch(emitEvent(event))
         }
     }
 }
