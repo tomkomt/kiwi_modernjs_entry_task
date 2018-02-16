@@ -12,6 +12,7 @@ module.exports = {
         fieldDropdownNoResultsMessage_loading: 'Načítavam... Prosím počkajte.'
     },
     foundFlightsResults: {
-        waitingForYourInput: 'Vitajte. Prosím, vyberte si miesto odletu, príletu a dátum začiatku a konca Vašej cesty.'
+        waitingForYourInput: 'Vitajte. Prosím, vyberte si miesto odletu, príletu a dátum začiatku a konca Vašej cesty.',
+        loadingFlightsResults: 'Načítavam... Prosím počkajte.'
     }  
 }

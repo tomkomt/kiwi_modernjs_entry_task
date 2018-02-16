@@ -12,6 +12,7 @@ module.exports = {
         fieldDropdownNoResultsMessage_loading: 'Loading... Please wait.'
     },
     foundFlightsResults: {
-        waitingForYourInput: 'Welcome. Please, select airport of your departure, arrival and date range of your trip.'
+        waitingForYourInput: 'Welcome. Please, select airport of your departure, arrival and date range of your trip.',
+        loadingFlightsResults: 'Loading... Please wait.'
     } 
 }
