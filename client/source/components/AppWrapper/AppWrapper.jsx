@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { loadLocalization } from '../../redux/localization/actions';
-
+import { requestAirlinesList } from '../../redux/airlines/actions';
 import SearchForm from '../SearchForm/SearchForm';
 import FoundFlightsResults from '../FoundFlightsResults/FoundFlightsResults';
 
@@ -17,6 +17,7 @@ class AppWrapper extends React.Component {
 
     componentDidMount() {
         this.props.loadLocalization(this.state.locale);
+        this.props.requestAirlinesList();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -47,6 +48,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         loadLocalization: (localizationCode) => {
             dispatch(loadLocalization(localizationCode));
+        },
+        requestAirlinesList: () => {
+            dispatch(requestAirlinesList());
         }
     }
 }
