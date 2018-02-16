@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import uuid from 'uuid';
 import moment from 'moment';
+import Consts from '../../consts/consts';
 
 import './FoundFlightsResults.scss';
 
@@ -14,6 +15,8 @@ class FoundFlightsResults extends React.Component {
         this.state = {
             flightsList: []
         }
+
+        this.renderRoutesList = this.renderRoutesList.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -26,15 +29,20 @@ class FoundFlightsResults extends React.Component {
 
     renderRoutesList(routesList) {
         return routesList.map(route => {
+            let newRoute = route.set('airline_object', this.props.airlines.find(airline => { return airline.get('id') == route.get('airline'); }))
             return(
                 <List.Item key={uuid()}>
                     <List.Content floated='left' verticalAlign='middle'>
-                        <Label className='label-airline' basic content={`${route.get('airline')} ${route.get('flight_no')}`} horizontal/>
-                        <Label color="blue" className='label-city' basic content={route.get('cityFrom')} horizontal/>
-                        <Label basic content={moment.unix(route.get('dTime')).format('DD.MM HH:mm')} horizontal/>
+                        <Label image basic as='div' horizontal>
+                            <img className="airline-logo" src={`${Consts.imgUrl}/${newRoute.get('airline')}.png`} />
+                            {newRoute.getIn(['airline_object', 'name'])}
+                        </Label>
+                        <Label color='green' basic content={`${newRoute.get('airline')} ${newRoute.get('flight_no')}`} horizontal/>
+                        <Label color="blue" basic content={newRoute.get('cityFrom')} horizontal/>
+                        <Label basic content={moment.unix(newRoute.get('dTime')).format('DD.MM HH:mm')} horizontal/>
                         <Icon name='long arrow right' size='small' />
-                        <Label color="blue" className='label-city' basic content={route.get('cityTo')} horizontal/>
-                        <Label basic content={moment.unix(route.get('aTime')).format('DD.MM HH:mm')} horizontal/>
+                        <Label color="blue" basic content={newRoute.get('cityTo')} horizontal/>
+                        <Label basic content={moment.unix(newRoute.get('aTime')).format('DD.MM HH:mm')} horizontal/>
                     </List.Content>
                 </List.Item>
             );
@@ -85,7 +93,8 @@ class FoundFlightsResults extends React.Component {
 const mapStateToProps = (state) => {
     return {
         localization: state.getIn(['localization', 'localizationData', 'foundFlightsResults']) ? state.getIn(['localization', 'localizationData', 'foundFlightsResults']) : Immutable.Map(),
-        flights: state.get('flights') ? state.get('flights') : Immutable.Map()
+        flights: state.get('flights') ? state.get('flights') : Immutable.Map(),
+        airlines: state.getIn(['airlines', 'airlinesList']) ? state.getIn(['airlines', 'airlinesList']) : Immutable.List()
     }
 }
 
