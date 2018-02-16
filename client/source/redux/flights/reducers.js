@@ -6,7 +6,7 @@ import Immutable from 'immutable';
 
 const INIT_STATE = {
     rev: uuid(),
-    flightsList: null
+    flightsList: []
 };
 
 const arrivalAirports = (state = Immutable.fromJS(INIT_STATE), action) => {
