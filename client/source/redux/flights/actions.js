@@ -28,23 +28,6 @@ export function requestSimpleFlightsSearch(fromAirport, toAirport, dateFrom, dat
     }
 }
 
-// function processRoutesList(routesList) {
-//     return routesList.filter(route => {
-//         return true;
-//     }).map(airport => {
-//         let imAirport = Immutable.fromJS(airport);
-//         return {
-//             id: imAirport.get('id'),
-//             int_id: imAirport.get('int_id'),
-//             code: imAirport.get('code'),
-//             name: imAirport.get('name'),
-//             city: imAirport.getIn(['city', 'name']),
-//             country_code: imAirport.getIn(['city', 'country', 'code'])
-//         }
-//     });
-// }
-
-
 export const RECEIVE_SIMPLE_FLIGHTS_SEARCH = 'RECEIVE_SIMPLE_FLIGHTS_SEARCH';
 export function receiveSimpleFlightsSearch(routesList) {
     try {
