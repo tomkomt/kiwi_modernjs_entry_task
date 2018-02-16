@@ -5,7 +5,8 @@ module.exports = {
         fieldFromPlaceholder: 'Select an airport of departure',
         fieldToText: 'To:',
         fieldToPlaceholder: 'Select an airport of arrival',
-        fieldWhenText: 'When:',
+        fieldWhenStartText: 'Starting when:',
+        fieldWhenEndText: 'Ending when:',
         submitButtonText: 'Search',
         fieldDropdownNoResultsMessage_noResult: 'No result matches...',
         fieldDropdownNoResultsMessage_loading: 'Loading... Please wait.'
