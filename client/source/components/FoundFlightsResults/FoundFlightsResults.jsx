@@ -15,6 +15,7 @@ class FoundFlightsResults extends React.Component {
 
         this.state = {
             isFlightListLoaded: false,
+            isFlightListPending: false,
             flightsList: [],
             paginatedFlightsList: [],
             activePage: 1,
@@ -30,7 +31,15 @@ class FoundFlightsResults extends React.Component {
                 flightsList: nextProps.flights.get('flightsList'),
                 paginatedFlightsList: this.paginateData(nextProps.flights.get('flightsList'), 1),
                 totalPages: Math.floor(nextProps.flights.get('flightsList').size / Consts.itemsPerFlightsResultsPage),
-                isFlightListLoaded: true
+                isFlightListLoaded: true,
+                isFlightListPending: false
+            })
+        }
+
+        if(nextProps.eventsEmitter.get('rev') != this.props.eventsEmitter.get('rev') && nextProps.eventsEmitter.get('event') == 'searchFormSubmit') {
+            this.setState({
+                isFlightListLoaded: false,
+                isFlightListPending: true
             })
         }
     }
@@ -123,7 +132,7 @@ class FoundFlightsResults extends React.Component {
                 <div>
                     <Loader type="ball-grid-beat" />
                 </div>
-                <div style={{ clear: 'both', textAlign: 'center' }}>{this.props.localization.get('waitingForYourInput')}</div>
+                <div style={{ clear: 'both', textAlign: 'center' }}>{this.state.isFlightListPending ? this.props.localization.get('loadingFlightsResults') : this.props.localization.get('waitingForYourInput')}</div>
             </div>
         )
     }
@@ -138,7 +147,8 @@ const mapStateToProps = (state) => {
     return {
         localization: state.getIn(['localization', 'localizationData', 'foundFlightsResults']) ? state.getIn(['localization', 'localizationData', 'foundFlightsResults']) : Immutable.Map(),
         flights: state.get('flights') ? state.get('flights') : Immutable.Map(),
-        airlines: state.getIn(['airlines', 'airlinesList']) ? state.getIn(['airlines', 'airlinesList']) : Immutable.List()
+        airlines: state.getIn(['airlines', 'airlinesList']) ? state.getIn(['airlines', 'airlinesList']) : Immutable.List(),
+        eventsEmitter: state.get('eventsEmitter') ? state.get('eventsEmitter') : Immutable.Map(),
     }
 }
 
