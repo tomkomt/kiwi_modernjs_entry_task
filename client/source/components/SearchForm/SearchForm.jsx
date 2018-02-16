@@ -41,16 +41,6 @@ class SearchForm extends React.Component {
         this.props.requestLoadAirportsByGPS(this.props.locale, this.state.gpsCoordinates.lat, this.state.gpsCoordinates.lon)
     }
 
-    mapAirportDropdownContent(airportsList) {
-        return airportsList.map(airport => {
-            return {
-                key: airport.get('id'),
-                text: `${airport.get('city')} (${airport.get('code')})`,
-                value: airport.get('id')
-            }
-        }).toJS();
-    }
-
     componentWillReceiveProps(nextProps) {
         if(this.props.arrivalAirports.get('rev') != nextProps.arrivalAirports.get('rev')) {
             this.setState({
@@ -67,10 +57,38 @@ class SearchForm extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.fromDestination != this.state.fromDestination) {
+            this.handleSubmitForm();
+        }
+
+        if(prevState.toDestination != this.state.toDestination) {
+            this.handleSubmitForm();
+        }
+
+        if(prevState.startDate.valueOf() != this.state.startDate.valueOf()) {
+            this.handleSubmitForm();
+        }
+
+        if(prevState.endDate.valueOf() != this.state.endDate.valueOf()) {
+            this.handleSubmitForm();
+        }
+    }
+
+    mapAirportDropdownContent(airportsList) {
+        return airportsList.map(airport => {
+            return {
+                key: airport.get('id'),
+                text: `${airport.get('city')} (${airport.get('code')})`,
+                value: airport.get('id')
+            }
+        }).toJS();
+    }
+
     handleFromChange(e, { value }) {
         this.setState({
             fromDestination: value
-        })
+        });
     }
 
     handleFromSearchChange(e, { searchQuery }) {
@@ -98,7 +116,7 @@ class SearchForm extends React.Component {
     handleToChange(e, { value }) {
         this.setState({
             toDestination: value
-        })
+        }); 
     }
 
     handleToSearchChange(e, { searchQuery }) {
@@ -126,13 +144,13 @@ class SearchForm extends React.Component {
     handleDateStartChange(newTime) {
         this.setState({
             startDate: newTime
-        })
+        });
     }
 
     handleDateEndChange(newTime) {
         this.setState({
             endDate: newTime
-        })
+        });
     }
 
     handleSubmitForm() {
@@ -209,7 +227,6 @@ class SearchForm extends React.Component {
                                 </Form.Field>
                             </Grid.Column>
                             <Grid.Column>
-                                <Form.Button type='submit' icon primary labelPosition='right'>{this.props.localization.get('submitButtonText')} <Icon name='search' /></Form.Button>
                             </Grid.Column>                            
                         </Grid.Row>
                     </Grid>
