@@ -26,7 +26,7 @@ class FoundFlightsResults extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.flights.get('rev') != this.props.flights.get('rev')) {
+        if(nextProps.flights.get('rev') != this.props.flights.get('rev') && nextProps.flights.get('reqNo') > this.props.flights.get('reqNo')) {
             this.setState({
                 flightsList: nextProps.flights.get('flightsList'),
                 paginatedFlightsList: this.paginateData(nextProps.flights.get('flightsList'), 1),
