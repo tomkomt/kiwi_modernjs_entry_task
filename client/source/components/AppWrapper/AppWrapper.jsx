@@ -26,6 +26,18 @@ class AppWrapper extends React.Component {
                 console.error(new Error('Localization file was not found!'))
             }
         }
+
+        if(nextProps.eventsEmitter.get('rev') != this.props.eventsEmitter.get('rev') && nextProps.eventsEmitter.get('event') == 'languageChange') {
+            this.setState({
+                locale: nextProps.eventsEmitter.get('data')
+            })
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.locale != this.state.locale) {
+            this.props.loadLocalization(this.state.locale);
+        }
     }
 
     render() {
@@ -40,7 +52,8 @@ class AppWrapper extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        localization: state.get('localization') ? state.get('localization') : Immutable.Map()
+        localization: state.get('localization') ? state.get('localization') : Immutable.Map(),
+        eventsEmitter: state.get('eventsEmitter') ? state.get('eventsEmitter') : Immutable.Map()
     }
 }
 

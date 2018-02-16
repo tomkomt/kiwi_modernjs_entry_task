@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Header, Form, Grid, Dropdown, Button, Icon, Flag } from 'semantic-ui-react';
+import { Segment, Header, Form, Grid, Dropdown, Button, Icon, Flag, List } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import DatePicker from 'react-datepicker';
@@ -164,6 +164,10 @@ class SearchForm extends React.Component {
         )
     }
 
+    handleLanguageClick(languageCode) {
+        this.props.emitEvent('languageChange', languageCode);
+    }
+
     render() {
         return(
             <Segment>
@@ -229,6 +233,14 @@ class SearchForm extends React.Component {
                                 </Form.Field>
                             </Grid.Column>
                             <Grid.Column>
+                                <List>
+                                    <List.Item>
+                                        <Flag name='us' style={{ cursor: 'pointer'}} onClick={this.handleLanguageClick.bind(this, 'en-US')}/>
+                                    </List.Item>
+                                    <List.Item>
+                                        <Flag name='sk' style={{ cursor: 'pointer'}} onClick={this.handleLanguageClick.bind(this, 'sk-SK')}/>
+                                    </List.Item>
+                                </List>
                             </Grid.Column>                            
                         </Grid.Row>
                     </Grid>
@@ -259,8 +271,8 @@ const mapDispatchToProps = (dispatch) => {
         requestSimpleFlightsSearch: (from, to, dateFrom, dateTo) => {
             dispatch(requestSimpleFlightsSearch(from, to, dateFrom, dateTo))
         },
-        emitEvent: (event) => {
-            dispatch(emitEvent(event))
+        emitEvent: (event, data) => {
+            dispatch(emitEvent(event, data))
         }
     }
 }
