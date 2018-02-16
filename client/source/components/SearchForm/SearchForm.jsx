@@ -5,52 +5,119 @@ import Immutable from 'immutable';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+import { requestLoadAirportsByGPS, requestLoadAirportsByQuery } from '../../redux/airports/actions';
 
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
+            init: true,
             fromDestination: '',
+            fromDestinationList: [],
+            fromSearchQuery: '',
             toDestination: '',
+            toDestinationList: [],
+            toSearchQuery: '',
             whenTime: moment(),
-            destinationList: [{
-                key: 0,
-                text: 'Loading',
-                value: 0
-            }]
+            gpsCoordinates: {
+                lat: 41.385064,
+                lon: 2.173403
+            },
+            noResultsMessage: '...'
         }
 
         this.handleFromChange = this.handleFromChange.bind(this);
         this.handleToChange = this.handleToChange.bind(this);
+        this.handleFromSearchChange = this.handleFromSearchChange.bind(this);
+        this.handleToSearchChange = this.handleToSearchChange.bind(this);
         this.handleDatePickerChange = this.handleDatePickerChange.bind(this);
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
     }
 
+    componentDidMount() {
+        this.props.requestLoadAirportsByGPS(this.props.locale, this.state.gpsCoordinates.lat, this.state.gpsCoordinates.lon)
+    }
+
+    mapAirportDropdownContent(airportsList) {
+        return airportsList.map(airport => {
+            return {
+                key: airport.get('id'),
+                text: `${airport.get('city')} (${airport.get('code')})`,
+                value: airport.get('id')
+            }
+        }).toJS();
+    }
+
     componentWillReceiveProps(nextProps) {
-        if(nextProps.airports.get('rev') != this.props.airports.get('rev')) {
+        if(this.props.arrivalAirports.get('rev') != nextProps.arrivalAirports.get('rev')) {
             this.setState({
-                destinationList: nextProps.airports.get('airportsList').map(airport => {
-                    return {
-                        key: airport.get('id'),
-                        text: `${airport.get('city')} (${airport.get('code')})`,
-                        value: airport.get('id')
-                    }
-                }).toJS()
-            })
+                toDestinationList: this.mapAirportDropdownContent(nextProps.arrivalAirports.get('airportsList')),
+                noResultsMessage: this.props.localization.get('fieldDropdownNoResultsMessage_noResult')
+            })            
+        }
+
+        if(this.props.departureAirports.get('rev') != nextProps.departureAirports.get('rev')) {
+            this.setState({
+                fromDestinationList: this.mapAirportDropdownContent(nextProps.departureAirports.get('airportsList')),
+                noResultsMessage: this.props.localization.get('fieldDropdownNoResultsMessage_noResult')
+            })            
         }
     }
 
-    handleFromChange(e, { newValue }) {
+    handleFromChange(e, { value }) {
         this.setState({
-            fromDestination: newValue
+            fromDestination: value
         })
     }
 
-    handleToChange(e, { newValue }) {
+    handleFromSearchChange(e, { searchQuery }) {
+        if(this.state.fromSearchQuery.length < searchQuery) {
+            let filteredList = this.state.fromDestinationList.filter(airport => {
+                return airport.value.indexOf(searchQuery) > -1 || airport.text.indexOf(searchQuery) > -1;
+            });
+            if(filteredList.length > 0) {
+                this.setState({
+                    fromDestinationList: filteredList,
+                    fromSearchQuery: searchQuery
+                });
+            } else {
+                this.props.requestLoadAirportsByQuery(this.props.locale, searchQuery, 'departure');
+            }
+        } else {
+            this.setState({
+                fromSearchQuery: searchQuery,
+                noResultsMessage: this.props.localization.get('fieldDropdownNoResultsMessage_loading')
+            });
+            this.props.requestLoadAirportsByQuery(this.props.locale, searchQuery, 'departure');
+        }
+    }
+
+    handleToChange(e, { value }) {
         this.setState({
-            toDestination: newValue
+            toDestination: value
         })
+    }
+
+    handleToSearchChange(e, { searchQuery }) {
+        if(this.state.toSearchQuery.length < searchQuery) {
+            let filteredList = this.state.toDestination.filter(airport => {
+                return airport.value.indexOf(searchQuery) > -1 || airport.text.indexOf(searchQuery) > -1;
+            });
+            if(filteredList.length > 0) {
+                this.setState({
+                    toDestination: filteredList,
+                    toSearchQuery: searchQuery
+                });
+            } else {
+                this.props.requestLoadAirportsByQuery(this.props.locale, searchQuery, 'arrival');
+            }
+        } else {
+            this.setState({
+                toSearchQuery: searchQuery,
+                noResultsMessage: this.props.localization.get('fieldDropdownNoResultsMessage_loading')
+            });
+            this.props.requestLoadAirportsByQuery(this.props.locale, searchQuery, 'arrival');
+        }
     }
 
     handleDatePickerChange(newTime) {
@@ -71,13 +138,33 @@ class SearchForm extends React.Component {
                             <Grid.Column>
                                 <Form.Field>
                                     <label>{this.props.localization.get('fieldFromText')}</label>
-                                    <Dropdown options={this.state.destinationList} value={this.state.fromDestination} placeholder={this.props.localization.get('fieldFromPlaceholder')} search selection fluid onChange={this.handleFromChange} />
+                                    <Dropdown 
+                                        options={this.state.fromDestinationList} 
+                                        value={this.state.fromDestination} 
+                                        placeholder={this.props.localization.get('fieldFromPlaceholder')} 
+                                        search 
+                                        selection 
+                                        fluid 
+                                        onChange={this.handleFromChange} 
+                                        onSearchChange={this.handleFromSearchChange} 
+                                        noResultsMessage={this.state.noResultsMessage}
+                                    />
                                 </Form.Field>
                             </Grid.Column>
                             <Grid.Column>
                                 <Form.Field>
                                     <label>{this.props.localization.get('fieldToText')}</label>
-                                    <Dropdown options={this.state.destinationList} value={this.state.toDestination} placeholder={this.props.localization.get('fieldToPlaceholder')} search selection fluid onChange={this.handleToChange} />
+                                    <Dropdown 
+                                        options={this.state.toDestinationList} 
+                                        value={this.state.toDestination} 
+                                        placeholder={this.props.localization.get('fieldToPlaceholder')} 
+                                        search 
+                                        selection 
+                                        fluid 
+                                        onChange={this.handleToChange} 
+                                        onSearchChange={this.handleToSearchChange}
+                                        noResultsMessage={this.state.noResultsMessage}
+                                    />
                                 </Form.Field>
                             </Grid.Column>  
                             <Grid.Column>
@@ -108,12 +195,19 @@ class SearchForm extends React.Component {
 const mapStateToProps = (state) => {
     return {
         localization: state.getIn(['localization', 'localizationData', 'searchForm']) ? state.getIn(['localization', 'localizationData', 'searchForm']) : Immutable.Map(),
-        airports: state.get('airports') ? state.get('airports') : Immutable.Map()
+        arrivalAirports: state.get('arrivalAirports') ? state.get('arrivalAirports') : Immutable.Map(),
+        departureAirports: state.get('departureAirports') ? state.get('departureAirports') : Immutable.Map()
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        requestLoadAirportsByGPS: (localizationCode, lat, lon) => {
+            dispatch(requestLoadAirportsByGPS(localizationCode, lat, lon))
+        },
+        requestLoadAirportsByQuery: (localizationCode, query, preposition) => {
+            dispatch(requestLoadAirportsByQuery(localizationCode, query, preposition))
+        }
     }
 }
 
