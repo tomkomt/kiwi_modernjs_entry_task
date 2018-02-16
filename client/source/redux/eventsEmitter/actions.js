@@ -1,7 +1,8 @@
 export const EMIT_EVENT = 'EMIT_EVENT';
-export function emitEvent(event) {
+export function emitEvent(event, data = null) {
     return {
         type: EMIT_EVENT,
-        event: event
+        event: event,
+        data: data
     }
 }

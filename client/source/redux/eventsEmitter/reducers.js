@@ -12,7 +12,8 @@ const eventsEmitter = (state = Immutable.fromJS(INIT_STATE), action) => {
         case EMIT_EVENT:
             return Immutable.fromJS({
                 rev: uuid(),
-                event: action.event
+                event: action.event,
+                data: action.hasOwnProperty('data') ? action.data : null
             })
         break;
 
