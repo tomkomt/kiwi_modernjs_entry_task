@@ -6,6 +6,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import { requestLoadAirportsByGPS, requestLoadAirportsByQuery } from '../../redux/airports/actions';
+import { requestSimpleFlightsSearch } from '../../redux/flights/actions';
+import Consts from '../../consts/consts';
 
 class SearchForm extends React.Component {
     constructor(props) {
@@ -18,7 +20,8 @@ class SearchForm extends React.Component {
             toDestination: '',
             toDestinationList: [],
             toSearchQuery: '',
-            whenTime: moment(),
+            startDate: moment(),
+            endDate: moment().add(3, 'days'),
             gpsCoordinates: {
                 lat: 41.385064,
                 lon: 2.173403
@@ -30,7 +33,8 @@ class SearchForm extends React.Component {
         this.handleToChange = this.handleToChange.bind(this);
         this.handleFromSearchChange = this.handleFromSearchChange.bind(this);
         this.handleToSearchChange = this.handleToSearchChange.bind(this);
-        this.handleDatePickerChange = this.handleDatePickerChange.bind(this);
+        this.handleDateStartChange = this.handleDateStartChange.bind(this);
+        this.handleDateEndChange = this.handleDateEndChange.bind(this);
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
     }
 
@@ -120,20 +124,32 @@ class SearchForm extends React.Component {
         }
     }
 
-    handleDatePickerChange(newTime) {
+    handleDateStartChange(newTime) {
         this.setState({
-            whenTime: newTime
+            startDate: newTime
+        })
+    }
+
+    handleDateEndChange(newTime) {
+        this.setState({
+            endDate: newTime
         })
     }
 
     handleSubmitForm() {
+        this.props.requestSimpleFlightsSearch(
+            this.state.fromDestination,
+            this.state.toDestination,
+            this.state.startDate.format(Consts.dateFormats.flightsRequestFormat),
+            this.state.endDate.format(Consts.dateFormats.flightsRequestFormat)
+        )
     }
 
     render() {
         return(
             <Segment>
                 <Form onSubmit={this.handleSubmitForm}> 
-                    <Grid columns={4}>
+                    <Grid columns={5}>
                         <Grid.Row>
                             <Grid.Column>
                                 <Form.Field>
@@ -169,19 +185,32 @@ class SearchForm extends React.Component {
                             </Grid.Column>  
                             <Grid.Column>
                                 <Form.Field>
-                                    <label>{this.props.localization.get('fieldWhenText')}</label>
+                                    <label>{this.props.localization.get('fieldWhenStartText')}</label>
                                     <DatePicker
-                                        onChange={this.handleDatePickerChange}
-                                        selected={this.state.whenTime}
-                                        timeIntervals={1}
-                                        dateFormat="D.M. YYYY"
+                                        selectsStart
+                                        onChange={this.handleDateStartChange}
+                                        selected={this.state.startDate}
+                                        startDate={this.state.startDate}
+                                        endDate={this.state.endDate}
+                                        dateFormat={Consts.dateFormats.searchFormFormat}
                                     />
                                 </Form.Field>
                             </Grid.Column>
                             <Grid.Column>
                                 <Form.Field>
-                                    <Button type='submit' icon primary labelPosition='right'>{this.props.localization.get('submitButtonText')} <Icon name='search' /></Button>
+                                    <label>{this.props.localization.get('fieldWhenEndText')}</label>
+                                    <DatePicker
+                                        selectsEnd
+                                        onChange={this.handleDateEndChange}
+                                        selected={this.state.endDate}
+                                        startDate={this.state.startDate}
+                                        endDate={this.state.endDate}
+                                        dateFormat={Consts.dateFormats.searchFormFormat}
+                                    />
                                 </Form.Field>
+                            </Grid.Column>
+                            <Grid.Column>
+                                <Form.Button type='submit' icon primary labelPosition='right'>{this.props.localization.get('submitButtonText')} <Icon name='search' /></Form.Button>
                             </Grid.Column>                            
                         </Grid.Row>
                     </Grid>
@@ -196,7 +225,8 @@ const mapStateToProps = (state) => {
     return {
         localization: state.getIn(['localization', 'localizationData', 'searchForm']) ? state.getIn(['localization', 'localizationData', 'searchForm']) : Immutable.Map(),
         arrivalAirports: state.get('arrivalAirports') ? state.get('arrivalAirports') : Immutable.Map(),
-        departureAirports: state.get('departureAirports') ? state.get('departureAirports') : Immutable.Map()
+        departureAirports: state.get('departureAirports') ? state.get('departureAirports') : Immutable.Map(),
+        flights: state.get('flights') ? state.get('flights') : Immutable.Map()
     }
 }
 
@@ -207,6 +237,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         requestLoadAirportsByQuery: (localizationCode, query, preposition) => {
             dispatch(requestLoadAirportsByQuery(localizationCode, query, preposition))
+        },
+        requestSimpleFlightsSearch: (from, to, dateFrom, dateTo) => {
+            dispatch(requestSimpleFlightsSearch(from, to, dateFrom, dateTo))
         }
     }
 }
