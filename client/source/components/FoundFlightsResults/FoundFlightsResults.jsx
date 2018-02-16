@@ -1,10 +1,11 @@
 import React from 'react';
-import { Segment, List, Statistic, Label, Icon } from 'semantic-ui-react';
+import { Segment, List, Statistic, Label, Icon, Pagination } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import uuid from 'uuid';
 import moment from 'moment';
 import Consts from '../../consts/consts';
+import Loader from 'react-loaders';
 
 import './FoundFlightsResults.scss';
 
@@ -13,18 +14,45 @@ class FoundFlightsResults extends React.Component {
         super(props);
 
         this.state = {
-            flightsList: []
+            isFlightListLoaded: false,
+            flightsList: [],
+            paginatedFlightsList: [],
+            activePage: 1,
+            totalPages: 1
         }
 
-        this.renderRoutesList = this.renderRoutesList.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.flights.get('rev') != this.props.flights.get('rev')) {
             this.setState({
-                flightsList: nextProps.flights.get('flightsList')
+                flightsList: nextProps.flights.get('flightsList'),
+                paginatedFlightsList: this.paginateData(nextProps.flights.get('flightsList'), 1),
+                totalPages: Math.floor(nextProps.flights.get('flightsList').size / Consts.itemsPerFlightsResultsPage),
+                isFlightListLoaded: true
             })
         }
+    }
+
+    handlePageChange(e, { activePage }) {
+        this.setState({
+            activePage: activePage,
+            paginatedFlightsList: this.paginateData(this.state.flightsList, activePage)
+        })
+    }
+
+    paginateData(flightsList, activePage) {
+        let firstRow = activePage == 1 ? 0 : ((activePage - 1) * Consts.itemsPerFlightsResultsPage);
+        let lastRow = firstRow + (Consts.itemsPerFlightsResultsPage);
+
+        return flightsList.slice(firstRow, lastRow);
+    }
+
+    firstPagination() {
+        this.setState({
+            paginatedFlightsList: this.state.flightsList.slice(0, Consts.itemsPerFlightsResultsPage  - 1)
+        })
     }
 
     renderRoutesList(routesList) {
@@ -50,7 +78,7 @@ class FoundFlightsResults extends React.Component {
     }
 
     renderFlightsList() {
-        return this.props.flights.get('flightsList').map(flight => {
+        return this.state.paginatedFlightsList.map(flight => {
             return(
                 <List.Item key={uuid()}>
                     <List.Content floated='left' verticalAlign='middle'>
@@ -78,14 +106,30 @@ class FoundFlightsResults extends React.Component {
         })
     }
 
-    render() {
+    renderIfReady() {
         return(
             <Segment>
                 <List divided relaxed>
                     {this.renderFlightsList()}
                 </List>
+                <Pagination activePage={this.state.activePage} totalPages={this.state.totalPages} onPageChange={this.handlePageChange} />
             </Segment>
         )
+    }
+
+    renderLoading() {
+        return(
+            <div>
+                <div>
+                    <Loader type="ball-grid-beat" />
+                </div>
+                <div style={{ clear: 'both', textAlign: 'center' }}>{this.props.localization.get('waitingForYourInput')}</div>
+            </div>
+        )
+    }
+
+    render() {
+        return this.state.isFlightListLoaded ? this.renderIfReady() : this.renderLoading();
     }
 }
 

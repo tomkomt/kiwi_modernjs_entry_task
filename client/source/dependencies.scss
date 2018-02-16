@@ -2,11 +2,18 @@
 @import "./fonts.scss";
 @import "./mixins.scss";
 
-@import "../../node_modules/loaders.css/src/animations/line-scale.scss";
+@import "../../node_modules/loaders.css/src/animations/ball-grid-beat.scss";
 
 .loader-hidden {
     display: none;
 }
 .loader-active {
     display: block;
+}
+.loader-inner {
+    margin: 0 auto;
+}
+
+.ball-grid-beat > div {
+    background-color: $secondaryBlackColor;
 }

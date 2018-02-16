@@ -10,5 +10,8 @@ module.exports = {
         submitButtonText: 'Search',
         fieldDropdownNoResultsMessage_noResult: 'No result matches...',
         fieldDropdownNoResultsMessage_loading: 'Loading... Please wait.'
+    },
+    foundFlightsResults: {
+        waitingForYourInput: 'Welcome. Please, select airport of your departure, arrival and date range of your trip.'
     } 
 }

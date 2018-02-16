@@ -10,5 +10,8 @@ module.exports = {
         submitButtonText: 'Potvrdiť',
         fieldDropdownNoResultsMessage_noResult: 'Nič sa nenašlo...',
         fieldDropdownNoResultsMessage_loading: 'Načítavam... Prosím počkajte.'
-    } 
+    },
+    foundFlightsResults: {
+        waitingForYourInput: 'Vitajte. Prosím, vyberte si miesto odletu, príletu a dátum začiatku a konca Vašej cesty.'
+    }  
 }

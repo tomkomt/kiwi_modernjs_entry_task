@@ -4,5 +4,6 @@ module.exports = {
     dateFormats: {
         flightsRequestFormat: 'DD/MM/YYYY',
         searchFormFormat: 'D.M. YYYY'
-    }
+    },
+    itemsPerFlightsResultsPage: 5
 }
